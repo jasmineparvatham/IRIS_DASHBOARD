@@ -31,16 +31,14 @@ The goal was to provide a clean, interactive, and responsive experience for stud
 ---
 
 ## 🚀 Live Demo
-🔗 **Live Website:** [https://iris-dashboard.netlify.app](https://iris-dashboard.netlify.app)  
+🔗 **Live Website:** [https://https://iris-nitk-dashboard.netlify.app](https://https://iris-nitk-dashboard.netlify.app)  
 💻 **GitHub Repository:** [https://github.com/jasmineparvatham/IRIS_DASHBOARD](https://github.com/jasmineparvatham/IRIS_DASHBOARD)
 
 ---
 
-## 🧠 Future Enhancements
-- Add real-time integration with IRIS database for live student data.  
+## 🧠 Future Enhancements  
 - Role-based dashboards for **Mess Admin**, **IRIS Admin**, and **Students**.  
-- Feedback analytics module to monitor mess satisfaction.  
-- Machine learning to predict mess popularity and food preferences.
+
 
 ---
 

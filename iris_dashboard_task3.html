@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IRIS Dashboard Redesign - Complete</title>
+    <title>IRIS Dashboard Redesign - Final Replica</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
@@ -22,12 +22,24 @@
             --blue-percent: #1890ff;
             --pink-percent: #ff0070;
             --sidebar-link-hover: #f0f0f0;
+
+            /* Sidebar Container Colors */
+            --sidebar-quicklinks: #fffbe6; /* Light Yellow */
+            --sidebar-module: #f9eefd;    /* Light Purple */
+            --sidebar-support: #e6fffb;   /* Light Cyan/Teal */
+
+            /* Right Sidebar Container Colors */
+            --right-deadline-bg: #ff0070;
+            --right-ongoing-bg: #007bff;
+            --right-notice-bg: #ff0070;
+
             /* Icon Colors (Approximation) */
             --icon-purple: #9254de;
             --icon-orange: #fa8c16;
             --icon-pink: #eb2f96;
             --icon-blue: #1890ff;
             --icon-green: #52c41a;
+            --icon-red: #ff4d4f;
         }
 
         * {
@@ -60,23 +72,21 @@
 
         .header-left { display: flex; align-items: center; }
         .logo-container {
-            display: flex;
-            align-items: center;
             font-weight: 700;
             color: var(--iris-blue);
+            font-size: 1.2rem;
             margin-right: 30px;
         }
-        .logo-container i { font-size: 1.5rem; margin-right: 8px; }
-
-        .main-nav ul { display: flex; gap: 25px; }
-        .main-nav li {
+        
+        .header-nav ul { display: flex; gap: 25px; }
+        .header-nav li {
             padding: 10px 0;
             cursor: pointer;
             font-weight: 500;
             color: var(--iris-light-text);
             border-bottom: 3px solid transparent;
         }
-        .main-nav li.active, .main-nav li:hover {
+        .header-nav li.active {
             color: var(--iris-dark-text);
             border-bottom: 3px solid var(--iris-blue);
         }
@@ -96,14 +106,30 @@
             transform: translateY(-50%);
             color: var(--iris-light-text);
         }
-        .user-icon { font-size: 1.2rem; cursor: pointer; color: var(--iris-dark-text); }
+        .icon-btn {
+            background: none;
+            border: none;
+            color: var(--iris-dark-text);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        .header-button {
+            background-color: var(--iris-blue);
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+        }
 
         /* --- 3. DASHBOARD GRID LAYOUT --- */
         .dashboard-grid {
             display: grid;
             gap: 20px;
             padding: 20px;
-            grid-template-columns: 280px 1fr; 
+            /* Main Content (70%) | Right Sidebar (30%) */
+            grid-template-columns: 1fr 300px; 
         }
 
         /* Reusable Card Style */
@@ -112,25 +138,31 @@
             padding: 20px;
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            transition: all 0.2s;
         }
 
-        /* --- 4. LEFT SIDEBAR (QUICK LINKS) --- */
-        .sidebar {
+        /* --- 4. LEFT SECTION (Sidebar + Main Content) --- */
+        .left-section {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 20px;
+        }
+
+        /* Left Sidebar Styling (Quick Links, etc.) */
+        .sidebar-left {
             display: flex;
             flex-direction: column;
             gap: 20px;
         }
 
-        .sidebar h3 {
+        .sidebar-left h3 {
             font-size: 0.8rem;
             color: var(--iris-light-text);
             margin-bottom: 10px;
             text-transform: uppercase;
             font-weight: 600;
         }
-
-        .sidebar ul li {
+        
+        .sidebar-left ul li {
             padding: 8px 10px;
             margin: 2px 0;
             color: var(--iris-dark-text);
@@ -138,9 +170,12 @@
             cursor: pointer;
             border-radius: 6px;
         }
-        .sidebar ul li:hover {
-            background-color: var(--sidebar-link-hover);
-        }
+
+        /* Specific Sidebar Background Colors */
+        .quick-links { background-color: var(--sidebar-quicklinks); }
+        .module-designers { background-color: var(--sidebar-module); }
+        .support { background-color: var(--sidebar-support); }
+
         .quick-links .btn {
             display: block;
             background-color: var(--iris-blue);
@@ -151,18 +186,18 @@
             margin-top: 15px;
             font-weight: 600;
         }
-        
-        /* --- 5. MAIN CONTENT AREA --- */
+
+        /* Main Content Area */
         .content-area {
             display: flex;
             flex-direction: column;
             gap: 20px;
         }
 
-        /* Top Row (Notice & Deadlines) */
+        /* Top Row (Notice & Deadlines/Stats) */
         .top-row {
-            display: grid;
-            grid-template-columns: 2fr 1fr; 
+            display: flex;
+            flex-direction: column;
             gap: 20px;
         }
 
@@ -174,7 +209,7 @@
             align-items: center;
             font-size: 1rem;
             border-left: 5px solid var(--urgent-red);
-            padding: 20px; /* Overrides default card padding */
+            padding: 15px 20px;
         }
 
         .urgent-tag {
@@ -186,73 +221,37 @@
             background-color: rgba(255, 77, 79, 0.1);
         }
 
-        .upcoming-deadlines {
-            background-color: var(--deadline-red);
-            color: white;
-            box-shadow: 0 4px 12px rgba(255, 0, 112, 0.3);
-            border-radius: 12px;
-            padding: 20px;
-        }
-        .upcoming-deadlines h3 {
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
-        .upcoming-deadlines p {
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-            font-size: 0.9rem;
-            display: flex;
-            justify-content: space-between;
-        }
-        .upcoming-deadlines p:last-of-type { border-bottom: none; }
-        .upcoming-deadlines .date { font-weight: 500; opacity: 0.9; }
-
-        /* Academic Stats Card */
-        .academic-stats {
+        /* Academic Stats Row */
+        .stats-row {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: 1fr 1fr;
             gap: 20px;
-            align-items: start;
         }
 
-        .stat-item {
-            padding: 5px 10px 5px 0;
-            font-size: 0.9rem;
+        .academic-info-card {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            align-items: center;
         }
-        .stat-item i { font-size: 1.2rem; color: var(--iris-blue); margin-right: 5px; }
-
-        .stat-item .value {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: var(--iris-dark-text);
-            display: flex;
-            align-items: baseline;
-            margin-bottom: 5px;
-        }
-        .stat-item .value i { color: #888; font-size: 1rem; margin-right: 5px; }
         
-        .attendance-group {
-            grid-column: span 2; /* Attendance takes up 2 columns */
+        .attendance-card {
             display: flex;
             flex-direction: column;
             gap: 10px;
-            padding: 5px 0;
         }
-        .attendance-group h4 {
+        .attendance-card h4 {
             font-size: 1rem;
-            color: var(--iris-dark-text);
             font-weight: 700;
             margin-bottom: 5px;
         }
-        
         .attendance-line {
             display: flex;
             align-items: center;
             gap: 10px;
             font-size: 0.85rem;
         }
-        .attendance-line span.course { width: 40px; }
+        .attendance-line span.course { width: 40px; font-weight: 600; }
         .attendance-bar-container {
             flex-grow: 1;
             background-color: #f0f0f0;
@@ -260,28 +259,26 @@
             height: 10px;
             overflow: hidden;
         }
-        .attendance-fill {
-            height: 100%;
-            border-radius: 10px;
-        }
-        .attendance-line .percent {
-            width: 30px;
-            font-weight: 600;
-            text-align: right;
-        }
-        
-        /* Specific Bar Colors */
+        .attendance-fill { height: 100%; border-radius: 10px; }
         .fill-92 { width: 92%; background-color: var(--green-percent); }
         .fill-95 { width: 95%; background-color: var(--blue-percent); }
         .fill-87 { width: 87%; background-color: var(--pink-percent); }
+        .attendance-line .percent { width: 30px; font-weight: 600; text-align: right; }
         
+        .stat-item .value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--iris-dark-text);
+            display: block;
+            margin-bottom: 5px;
+        }
+        .stat-item {
+            font-size: 0.9rem;
+        }
+
         /* Announcements/Tabs Section */
         .announcements-section { padding-top: 5px; }
-        .tabs {
-            display: flex;
-            border-bottom: 1px solid #eee;
-            margin-bottom: 15px;
-        }
+        .tabs { display: flex; border-bottom: 1px solid #eee; margin-bottom: 15px; }
         .tabs button {
             padding: 10px 15px;
             border: none;
@@ -289,50 +286,34 @@
             cursor: pointer;
             font-weight: 600;
             color: var(--iris-light-text);
-            margin-right: 5px;
             border-bottom: 3px solid transparent;
-            transition: all 0.2s;
         }
-        .tabs .active {
-            border-bottom: 3px solid var(--iris-blue);
-            color: var(--iris-blue);
-        }
+        .tabs .active { border-bottom: 3px solid var(--iris-blue); color: var(--iris-blue); }
 
-        .tab-content p {
-            padding: 10px 0;
-            font-size: 0.95rem;
-            border-bottom: 1px dashed #eee;
-        }
+        .tab-content p { padding: 10px 0; font-size: 0.95rem; border-bottom: 1px dashed #eee; }
         .tab-content p:last-of-type { border-bottom: none; }
         
         /* Module Icons Grid */
         .module-icons {
-            display: flex;
-            gap: 15px;
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 10px;
             padding: 10px 0;
-            justify-content: space-around;
         }
         .icon-item {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            width: 80px;
             aspect-ratio: 1 / 1;
             border-radius: 12px;
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             font-weight: 500;
-            transition: transform 0.2s;
         }
-        .icon-item:hover { transform: translateY(-3px); }
-
-        .icon-item i {
-            font-size: 1.5rem;
-            margin-bottom: 5px;
-        }
+        .icon-item i { font-size: 1.5rem; margin-bottom: 5px; }
         
-        /* Specific Icon Colors based on screenshot */
+        /* Specific Icon Colors */
         .icon-item:nth-child(1) { background-color: #f6edff; color: var(--icon-purple); } /* Calendar */
         .icon-item:nth-child(2) { background-color: #fff0ed; color: var(--icon-orange); } /* Library */
         .icon-item:nth-child(3) { background-color: #e6fffb; color: var(--icon-blue); } /* Fees */
@@ -340,113 +321,87 @@
         .icon-item:nth-child(5) { background-color: #e5f7ff; color: var(--icon-blue); } /* Attendance */
         .icon-item:nth-child(6) { background-color: #fff0f6; color: var(--icon-pink); } /* Clubs */
         .icon-item:nth-child(7) { background-color: #edfff5; color: var(--icon-green); } /* Events */
-        
-        /* Custom Widgets Row */
-        .custom-widgets-row {
-            display: grid;
-            grid-template-columns: 3fr 1fr; 
-            gap: 20px;
-        }
+        .icon-item:nth-child(8) { background-color: #ffeded; color: var(--icon-red); } /* Feedback/Survey */
 
         /* Club Announcements */
-        .club-announcements h3 {
-            color: var(--iris-blue);
-            margin-bottom: 15px;
-            font-size: 1.1rem;
-        }
-        .announcement-item {
-            padding: 10px 0;
-            border-bottom: 1px dashed #eee;
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
+        .club-announcements h3 { color: var(--iris-blue); margin-bottom: 15px; font-size: 1.1rem; }
+        .announcement-item { padding: 10px 0; border-bottom: 1px dashed #eee; font-size: 0.9rem; font-weight: 500; }
         .announcement-item:last-of-type { border-bottom: none; }
         .announcement-item strong { color: var(--iris-blue); }
 
-        /* Important Notices */
-        .important-notices-container {
-             display: flex;
-             flex-direction: column;
-             gap: 20px;
+        /* --- 5. RIGHT SIDEBAR (Deadlines, Ongoing, Notices) --- */
+        .sidebar-right {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
-        .important-notice-card {
-            background-color: var(--iris-blue);
+        .deadline-card {
+            background-color: var(--right-deadline-bg);
             color: white;
-            border-radius: 12px;
-            padding: 15px;
-            box-shadow: 0 4px 12px rgba(93, 80, 245, 0.3);
+            padding: 20px;
+        }
+        .deadline-card h3 { font-size: 1.1rem; margin-bottom: 10px; font-weight: 700; }
+        .deadline-card p {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
         }
 
-        .important-notice-card h4 {
-            font-size: 1rem;
-            margin-bottom: 5px;
-            font-weight: 700;
-        }
-        .important-notice-card p {
-            font-size: 0.85rem;
-            font-weight: 500;
-            line-height: 1.4;
-            opacity: 0.9;
-        }
-
-        .red-notice-card {
-            background-color: var(--urgent-red);
+        .ongoing-card {
+            background-color: var(--right-ongoing-bg);
             color: white;
-            padding: 15px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(255, 77, 79, 0.3);
+            padding: 20px;
         }
-        .red-notice-card h3 {
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-            font-weight: 700;
+        .ongoing-card h3 { font-size: 1.1rem; margin-bottom: 10px; font-weight: 700; }
+        .ongoing-card p {
+            font-size: 0.9rem;
+            padding: 5px 0;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.3);
         }
-        .red-notice-card p {
+
+        .important-notices-card {
+            background-color: var(--right-notice-bg);
+            color: white;
+            padding: 20px;
+        }
+        .important-notices-card h3 { font-size: 1.1rem; margin-bottom: 10px; font-weight: 700; }
+        .important-notices-card p {
             font-size: 0.85rem;
-            margin-bottom: 5px;
-            font-weight: 500;
+            margin-bottom: 8px;
+            padding-bottom: 8px;
             border-bottom: 1px dashed rgba(255, 255, 255, 0.4);
-            padding-bottom: 5px;
         }
-        .red-notice-card p:last-of-type { border-bottom: none; }
+        .important-notices-card p:last-of-type { border-bottom: none; }
+
 
         /* --- 6. RESPONSIVENESS (Mobile/Tablet) --- */
         @media (max-width: 1200px) {
-            .academic-stats { grid-template-columns: repeat(2, 1fr); }
-            .attendance-group { grid-column: span 2; }
-            .top-row { grid-template-columns: 1fr; }
-            .custom-widgets-row { grid-template-columns: 1fr; }
-        }
-
-        @media (max-width: 1024px) {
             .dashboard-grid { grid-template-columns: 1fr; }
-            .sidebar { order: 2; }
-            .content-area { order: 1; }
-            .header-left, .header-right { flex-grow: 1; }
-            .main-nav { display: none; /* Hide main nav on smaller screens */ }
+            .left-section { grid-template-columns: 200px 1fr; }
+            .sidebar-right { order: -1; } /* Deadlines first on small screen */
+            .stats-row { grid-template-columns: 1fr; }
+            .academic-info-card { grid-template-columns: repeat(3, 1fr); }
+            .module-icons { grid-template-columns: repeat(auto-fit, minmax(70px, 1fr)); }
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
+            .left-section { grid-template-columns: 1fr; }
+            .sidebar-left { order: 2; }
+            .content-area { order: 1; }
             .header { flex-wrap: wrap; }
-            .header-left { margin-bottom: 10px; }
+            .header-right { width: 100%; margin-top: 10px; justify-content: space-between; }
             .search-bar input { width: 100%; }
-            .academic-stats { grid-template-columns: 1fr; }
-            .attendance-group { grid-column: span 1; }
-            .stat-item { padding: 10px 0; border-bottom: 1px solid #eee; }
-            .stat-item:last-of-type { border-bottom: none; }
-            .module-icons { flex-wrap: wrap; justify-content: space-around; }
-            .icon-item { width: 60px; }
         }
     </style>
 </head>
 <body>
     <header class="header">
         <div class="header-left">
-            <div class="logo-container">
-                <i class="fas fa-university"></i>IRIS
-            </div>
-            <nav class="main-nav">
+            <div class="logo-container">IRIS</div>
+            <nav class="header-nav">
                 <ul>
                     <li class="active">Dashboard | IRIS</li>
                     <li>Academics</li>
@@ -460,122 +415,112 @@
                 <i class="fas fa-search"></i>
                 <input type="search" placeholder="Search for...">
             </div>
-            <button class="header-actions btn" style="background-color: var(--iris-blue); color: white; padding: 8px 15px; border: none; border-radius: 20px; font-weight: 600;">
-                <i class="fas fa-bell"></i> Tell IRIS
-            </button>
-            <i class="user-icon fas fa-user-circle"></i>
+            <button class="header-button"><i class="fas fa-bell"></i> Tell IRIS</button>
+            <i class="icon-btn fas fa-user-circle"></i>
         </div>
     </header>
 
     <main class="dashboard-grid">
-        <aside class="sidebar">
-            <div class="quick-links card">
-                <h3>QUICK LINKS</h3>
-                <ul>
-                    <li>About IRIS</li>
-                    <li>IRIS Blog</li>
-                    <li>NITK Website</li>
-                    <li>Terms of Service</li>
-                </ul>
-                <a href="#" class="btn">Login to Moodle</a>
-            </div>
+        <div class="left-section">
+            <aside class="sidebar-left">
+                <div class="quick-links card">
+                    <h3>QUICK LINKS</h3>
+                    <ul>
+                        <li>About IRIS</li>
+                        <li>IRIS Blog</li>
+                        <li>NITK Website</li>
+                        <li>Terms of Service</li>
+                    </ul>
+                    <a href="#" class="btn">Login to Moodle</a>
+                </div>
 
-            <div class="module-designers card">
-                <h3>MODULE DESIGNERS</h3>
-                <ul>
-                    <li><i class="fas fa-book-open"></i> Course Designer</li>
-                    <li><i class="fas fa-tasks"></i> Assignment Designer</li>
-                    <li><i class="fas fa-question-circle"></i> Quiz Designer</li>
-                </ul>
-            </div>
-            
-            <div class="support card">
-                <h3>SUPPORT</h3>
-                <ul>
-                    <li>Help Center</li>
-                    <li>Documentation</li>
-                    <li>Contact Support</li>
-                </ul>
-            </div>
-        </aside>
-
-        <div class="content-area">
-            <div class="top-row">
-                <div class="library-notice card">
-                    <i class="fas fa-exclamation-triangle" style="color: var(--urgent-red); margin-right: 10px;"></i>
-                    Final book consumption starts in 3 days. Overdue books due for return by Oct 27. <span class="urgent-tag">Urgent</span>
-                </div>
-                <div class="upcoming-deadlines">
-                    <h3>Upcoming Quizzes & Deadlines</h3>
-                    <p>C5301 Assignment 3 <span class="date">Oct 26, 2025</span></p>
-                    <p>C5302 Quiz 2 <span class="date">Oct 30, 2025</span></p>
-                    <p>MA302 Project Report <span class="date">Nov 4, 2025</span></p>
-                </div>
-            </div>
-
-            <div class="academic-stats card">
-                <div class="stat-item">
-                    <span class="value">44</span> Major Credits
-                </div>
-                <div class="stat-item">
-                    <span class="value">8.18</span> SGPA
-                </div>
-                <div class="stat-item">
-                    <span class="value">3<i class="fas fa-chevron-down"></i></span> Semester
+                <div class="module-designers card">
+                    <h3>MODULE DESIGNERS</h3>
+                    <ul>
+                        <li><i class="fas fa-book-open"></i> Course Designer</li>
+                        <li><i class="fas fa-tasks"></i> Assignment Designer</li>
+                        <li><i class="fas fa-question-circle"></i> Quiz Designer</li>
+                    </ul>
                 </div>
                 
-                <div class="attendance-group">
-                    <h4>Attendance</h4>
-                    <div class="attendance-line">
-                        <span class="course">C5301</span>
-                        <div class="attendance-bar-container"><div class="attendance-fill fill-92"></div></div>
-                        <span class="percent" style="color: var(--green-percent);">92%</span>
-                    </div>
-                    <div class="attendance-line">
-                        <span class="course">C5302</span>
-                        <div class="attendance-bar-container"><div class="attendance-fill fill-95"></div></div>
-                        <span class="percent" style="color: var(--blue-percent);">95%</span>
-                    </div>
-                    <div class="attendance-line">
-                        <span class="course">C5303</span>
-                        <div class="attendance-bar-container"><div class="attendance-fill fill-87"></div></div>
-                        <span class="percent" style="color: var(--pink-percent);">87%</span>
+                <div class="support card">
+                    <h3>SUPPORT</h3>
+                    <ul>
+                        <li>Help Center</li>
+                        <li>Documentation</li>
+                        <li>Contact Support</li>
+                    </ul>
+                </div>
+            </aside>
+
+            <div class="content-area">
+                <div class="top-row">
+                    <div class="library-notice card">
+                        <i class="fas fa-exclamation-triangle" style="color: var(--urgent-red); margin-right: 10px;"></i>
+                        Final book consumption starts in 3 days. Overdue books due for return by Oct 27. <span class="urgent-tag">Urgent</span>
                     </div>
                 </div>
-            </div>
 
-            <div class="announcements-section card">
-                <div class="tabs" id="announcement-tabs">
-                    <button class="active" data-tab="announcements">Announcements</button>
-                    <button data-tab="detailed-attendance">Detailed Attendance</button>
-                    <button data-tab="courses">Courses</button>
+                <div class="stats-row">
+                    <div class="academic-info-card card">
+                        <div class="stat-item">
+                            <span class="value" style="color: var(--iris-dark-text);">44</span> Major Credits
+                        </div>
+                        <div class="stat-item">
+                            <span class="value" style="color: var(--iris-dark-text);">8.18</span> SGPA
+                        </div>
+                        <div class="stat-item">
+                            <span class="value" style="color: var(--iris-dark-text);">3<i class="fas fa-chevron-down" style="font-size: 1rem; margin-left: 5px; color: var(--iris-light-text);"></i></span> Semester
+                        </div>
+                    </div>
+                    
+                    <div class="attendance-card card">
+                        <h4>Attendance</h4>
+                        <div class="attendance-line">
+                            <span class="course">C5301</span>
+                            <div class="attendance-bar-container"><div class="attendance-fill fill-92"></div></div>
+                            <span class="percent" style="color: var(--green-percent);">92%</span>
+                        </div>
+                        <div class="attendance-line">
+                            <span class="course">C5302</span>
+                            <div class="attendance-bar-container"><div class="attendance-fill fill-95"></div></div>
+                            <span class="percent" style="color: var(--blue-percent);">95%</span>
+                        </div>
+                        <div class="attendance-line">
+                            <span class="course">C5303</span>
+                            <div class="attendance-bar-container"><div class="attendance-fill fill-87"></div></div>
+                            <span class="percent" style="color: var(--pink-percent);">87%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="announcements-section card">
+                    <div class="tabs" id="announcement-tabs">
+                        <button class="active" data-tab="announcements">Announcements</button>
+                        <button data-tab="detailed-attendance">Detailed Attendance</button>
+                        <button data-tab="courses">Courses</button>
+                    </div>
+                    
+                    <div class="tab-content announcement-list" data-content="announcements">
+                        <p>**Incub@75** (NITK's Entrepreneurship Summit) registrations now open.</p>
+                        <p>Fee payment portal is now open.</p>
+                        <p>Mess change module released.</p>
+                    </div>
+                    <div class="tab-content" data-content="detailed-attendance" style="display:none;">Detailed attendance data for all courses will be displayed here.</div>
+                    <div class="tab-content" data-content="courses" style="display:none;">Your full course list, grades, and resources.</div>
+                </div>
+
+                <div class="module-icons">
+                    <div class="icon-item"><i class="fas fa-calendar-alt"></i> Calendar</div>
+                    <div class="icon-item"><i class="fas fa-book"></i> Library</div>
+                    <div class="icon-item"><i class="fas fa-money-bill-wave"></i> Fees</div>
+                    <div class="icon-item"><i class="fas fa-utensils"></i> Mess</div>
+                    <div class="icon-item"><i class="fas fa-clipboard-check"></i> Attendance</div>
+                    <div class="icon-item"><i class="fas fa-users"></i> Clubs</div>
+                    <div class="icon-item"><i class="fas fa-running"></i> Events</div>
+                    <div class="icon-item"><i class="fas fa-cogs"></i> Settings</div>
                 </div>
                 
-                <div class="tab-content announcement-list" data-content="announcements">
-                    <p>**Incub@75** (NITK's Entrepreneurship Summit) registrations now open.</p>
-                    <p>Fee payment portal is now open.</p>
-                    <p>Mess change module released.</p>
-                </div>
-                <div class="tab-content" data-content="detailed-attendance" style="display:none;">
-                    Detailed attendance data for all courses will be displayed here.
-                </div>
-                <div class="tab-content" data-content="courses" style="display:none;">
-                    Your full course list, grades, and resources.
-                </div>
-            </div>
-
-            <div class="module-icons">
-                <div class="icon-item"><i class="fas fa-calendar-alt"></i> Calendar</div>
-                <div class="icon-item"><i class="fas fa-book"></i> Library</div>
-                <div class="icon-item"><i class="fas fa-money-bill-wave"></i> Fees</div>
-                <div class="icon-item"><i class="fas fa-utensils"></i> Mess</div>
-                <div class="icon-item"><i class="fas fa-clipboard-check"></i> Attendance</div>
-                <div class="icon-item"><i class="fas fa-users"></i> Clubs</div>
-                <div class="icon-item"><i class="fas fa-running"></i> Events</div>
-                <div class="icon-item"><i class="fas fa-cogs"></i> Settings</div>
-            </div>
-            
-            <div class="custom-widgets-row">
                 <div class="club-announcements card">
                     <h3>Custom Widgets - Club Announcements</h3>
                     <div class="announcement-item"><strong>IEEE ANNOUNCEMENTS</strong>: Workshop on IoT - Nov 5, 2025</div>
@@ -583,25 +528,36 @@
                     <div class="announcement-item"><strong>ISTE ANNOUNCEMENTS</strong>: Coding Competition - Oct 28</div>
                     <div class="announcement-item">Tech Talk starts shortly...</div>
                 </div>
-
-                <div class="important-notices-container">
-                    <div class="important-notice-card">
-                        <h4>Main Registration</h4>
-                        <p>Detailed information about the next semester's registration cycle.</p>
-                    </div>
-                    <div class="important-notice-card">
-                        <h4>Tech Talk: AI</h4>
-                        <p>Speakers: Mr. Smith. Venue: L-104 A.</p>
-                    </div>
-                    <div class="red-notice-card">
-                        <h3>Important Notices</h3>
-                        <p>Fee payment due Oct 30</p>
-                        <p>Mess change module released</p>
-                        <p>Learner registration starts from 1 Nov</p>
-                    </div>
-                </div>
             </div>
         </div>
+        
+        <aside class="sidebar-right">
+            <div class="deadline-card card">
+                <h3>Upcoming Quizzes & Deadlines</h3>
+                <p>C5301 Assignment 3 <span class="urgent-tag" style="background: none;">Urgent</span></p>
+                <p>C5302 Quiz 2 <span class="date">Oct 30, 2025</span></p>
+                <p>MA302 Project Report <span class="date">Nov 4, 2025</span></p>
+            </div>
+            
+            <div class="ongoing-card card">
+                <h3>Ongoing Events</h3>
+                <p>Incub@25 Ideathon is live!</p>
+                <p>Semester Exams Registration Open</p>
+            </div>
+
+            <div class="important-notices-card card">
+                <h3>Important Notices</h3>
+                <p>Fee payment due Oct 30</p>
+                <p>Mess change module released</p>
+                <p>Learner registration starts from 1 Nov</p>
+            </div>
+            
+            <div class="ongoing-card card" style="background-color: #00a896;">
+                <h3>Tech Talk: AI</h3>
+                <p>Speakers: Mr. Smith</p>
+                <p>Venue: L-104 A</p>
+            </div>
+        </aside>
     </main>
     
     <script>

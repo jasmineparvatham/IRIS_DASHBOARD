@@ -3,20 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IRIS Dashboard Redesign (Embedded)</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>IRIS Dashboard Redesign - Complete</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <style>
-        /* CSS STYLES */
+        /* --- 1. COLOR PALETTE & TYPOGRAPHY --- */
         :root {
-            --primary-color: #5d50f5; /* A shade of blue/purple */
-            --secondary-color: #e9e9f9;
-            --background-color: #f4f6f9;
-            --card-background: #ffffff;
-            --urgent-color: #ff4d4f;
-            --text-color: #333;
-            --light-text: #666;
-            --success-color: #52c41a;
+            --iris-blue: #5d50f5; /* Primary accent blue/purple */
+            --iris-dark-text: #333;
+            --iris-light-text: #666;
+            --iris-background: #f4f6f9; /* Light gray background */
+            --card-bg: #ffffff;
+            --urgent-red: #ff4d4f;
+            --library-notice-bg: #e5e5ff; /* Light purple for library notice */
+            --deadline-red: #ff0070; /* Pinkish-red for deadlines card */
+            --green-percent: #52c41a;
+            --blue-percent: #1890ff;
+            --pink-percent: #ff0070;
+            --sidebar-link-hover: #f0f0f0;
+            /* Icon Colors (Approximation) */
+            --icon-purple: #9254de;
+            --icon-orange: #fa8c16;
+            --icon-pink: #eb2f96;
+            --icon-blue: #1890ff;
+            --icon-green: #52c41a;
         }
 
         * {
@@ -27,74 +38,84 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            line-height: 1.6;
+            background-color: var(--iris-background);
+            color: var(--iris-dark-text);
+            line-height: 1.5;
+            min-height: 100vh;
         }
 
-        ul {
-            list-style: none;
-        }
+        ul { list-style: none; }
+        a { text-decoration: none; color: inherit; }
 
-        /* Header Styling */
+        /* --- 2. HEADER & NAVIGATION --- */
         .header {
-            background-color: var(--card-background);
-            padding: 15px 30px;
+            background-color: var(--card-bg);
+            padding: 10px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+            font-size: 0.95rem;
         }
 
-        .logo {
-            font-size: 1.5rem;
+        .header-left { display: flex; align-items: center; }
+        .logo-container {
+            display: flex;
+            align-items: center;
             font-weight: 700;
-            color: var(--primary-color);
+            color: var(--iris-blue);
+            margin-right: 30px;
         }
+        .logo-container i { font-size: 1.5rem; margin-right: 8px; }
 
-        .main-nav ul {
-            display: flex;
-            gap: 20px;
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .header-actions input[type="search"] {
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-
-        .header-actions button {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 8px 15px;
-            border: none;
-            border-radius: 4px;
+        .main-nav ul { display: flex; gap: 25px; }
+        .main-nav li {
+            padding: 10px 0;
             cursor: pointer;
+            font-weight: 500;
+            color: var(--iris-light-text);
+            border-bottom: 3px solid transparent;
+        }
+        .main-nav li.active, .main-nav li:hover {
+            color: var(--iris-dark-text);
+            border-bottom: 3px solid var(--iris-blue);
         }
 
-        /* Main Dashboard Grid Layout */
+        .header-right { display: flex; align-items: center; gap: 15px; }
+        .search-bar { position: relative; }
+        .search-bar input {
+            padding: 8px 15px 8px 35px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            width: 200px;
+        }
+        .search-bar i {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--iris-light-text);
+        }
+        .user-icon { font-size: 1.2rem; cursor: pointer; color: var(--iris-dark-text); }
+
+        /* --- 3. DASHBOARD GRID LAYOUT --- */
         .dashboard-grid {
             display: grid;
             gap: 20px;
             padding: 20px;
-            /* Default layout: Sidebar (280px) and Content (rest) */
             grid-template-columns: 280px 1fr; 
         }
 
         /* Reusable Card Style */
         .card {
-            background-color: var(--card-background);
+            background-color: var(--card-bg);
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s;
         }
 
-        /* Sidebar Styling */
+        /* --- 4. LEFT SIDEBAR (QUICK LINKS) --- */
         .sidebar {
             display: flex;
             flex-direction: column;
@@ -102,263 +123,347 @@
         }
 
         .sidebar h3 {
-            font-size: 0.9rem;
-            color: var(--light-text);
+            font-size: 0.8rem;
+            color: var(--iris-light-text);
             margin-bottom: 10px;
             text-transform: uppercase;
+            font-weight: 600;
         }
 
         .sidebar ul li {
-            padding: 8px 0;
-            color: var(--primary-color);
-            font-weight: 600;
+            padding: 8px 10px;
+            margin: 2px 0;
+            color: var(--iris-dark-text);
+            font-weight: 500;
             cursor: pointer;
+            border-radius: 6px;
+        }
+        .sidebar ul li:hover {
+            background-color: var(--sidebar-link-hover);
+        }
+        .quick-links .btn {
+            display: block;
+            background-color: var(--iris-blue);
+            color: white;
+            text-align: center;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 15px;
+            font-weight: 600;
         }
         
-        .sidebar ul li:hover {
-            opacity: 0.8;
-        }
-
-        /* Content Area Layout */
+        /* --- 5. MAIN CONTENT AREA --- */
         .content-area {
             display: flex;
             flex-direction: column;
             gap: 20px;
         }
 
+        /* Top Row (Notice & Deadlines) */
         .top-row {
             display: grid;
-            /* Library Notice (40%) | Deadlines (60%) */
-            grid-template-columns: 2fr 3fr; 
+            grid-template-columns: 2fr 1fr; 
             gap: 20px;
         }
 
         .library-notice {
-            background-color: var(--secondary-color);
-            color: var(--text-color);
+            background-color: var(--library-notice-bg);
+            color: var(--iris-dark-text);
             font-weight: 600;
             display: flex;
             align-items: center;
+            font-size: 1rem;
+            border-left: 5px solid var(--urgent-red);
+            padding: 20px; /* Overrides default card padding */
         }
 
-        .urgent {
-            color: var(--urgent-color);
+        .urgent-tag {
+            color: var(--urgent-red);
             font-weight: 700;
             margin-left: 10px;
-            padding: 4px 8px;
+            padding: 3px 8px;
             border-radius: 4px;
             background-color: rgba(255, 77, 79, 0.1);
         }
 
+        .upcoming-deadlines {
+            background-color: var(--deadline-red);
+            color: white;
+            box-shadow: 0 4px 12px rgba(255, 0, 112, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+        }
         .upcoming-deadlines h3 {
-            color: var(--urgent-color);
-            margin-bottom: 15px;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            font-weight: 700;
         }
         .upcoming-deadlines p {
-            padding: 5px 0;
-            border-bottom: 1px dashed #eee;
-        }
-        .upcoming-deadlines p:last-of-type {
-             border-bottom: none;
-        }
-
-
-        .academic-stats {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            font-size: 0.9rem;
             display: flex;
+            justify-content: space-between;
+        }
+        .upcoming-deadlines p:last-of-type { border-bottom: none; }
+        .upcoming-deadlines .date { font-weight: 500; opacity: 0.9; }
+
+        /* Academic Stats Card */
+        .academic-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
             gap: 20px;
+            align-items: start;
         }
 
         .stat-item {
-            flex-grow: 1;
-            padding: 15px;
-            border-right: 1px solid #eee;
+            padding: 5px 10px 5px 0;
+            font-size: 0.9rem;
         }
-
-        .stat-item:last-child {
-            border-right: none;
-        }
+        .stat-item i { font-size: 1.2rem; color: var(--iris-blue); margin-right: 5px; }
 
         .stat-item .value {
-            font-size: 2rem;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--iris-dark-text);
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 5px;
+        }
+        .stat-item .value i { color: #888; font-size: 1rem; margin-right: 5px; }
+        
+        .attendance-group {
+            grid-column: span 2; /* Attendance takes up 2 columns */
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 5px 0;
+        }
+        .attendance-group h4 {
+            font-size: 1rem;
+            color: var(--iris-dark-text);
             font-weight: 700;
-            color: var(--primary-color);
-            display: block;
+            margin-bottom: 5px;
         }
         
-        /* Attendance Bars */
-        .attendance-bar {
+        .attendance-line {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+        }
+        .attendance-line span.course { width: 40px; }
+        .attendance-bar-container {
+            flex-grow: 1;
             background-color: #f0f0f0;
-            border-radius: 4px;
-            height: 8px;
-            margin-top: 5px;
+            border-radius: 10px;
+            height: 10px;
             overflow: hidden;
         }
-        
         .attendance-fill {
             height: 100%;
-            background-color: var(--success-color);
+            border-radius: 10px;
+        }
+        .attendance-line .percent {
+            width: 30px;
+            font-weight: 600;
+            text-align: right;
         }
         
-        .attendance-detail {
+        /* Specific Bar Colors */
+        .fill-92 { width: 92%; background-color: var(--green-percent); }
+        .fill-95 { width: 95%; background-color: var(--blue-percent); }
+        .fill-87 { width: 87%; background-color: var(--pink-percent); }
+        
+        /* Announcements/Tabs Section */
+        .announcements-section { padding-top: 5px; }
+        .tabs {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.9rem;
-            margin-top: 5px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 15px;
         }
-
-
-        /* Announcements/Tabs */
         .tabs button {
             padding: 10px 15px;
             border: none;
             background: none;
             cursor: pointer;
             font-weight: 600;
-            color: var(--light-text);
-            margin-bottom: 10px;
+            color: var(--iris-light-text);
+            margin-right: 5px;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
         }
-
         .tabs .active {
-            border-bottom: 3px solid var(--primary-color);
-            color: var(--primary-color);
+            border-bottom: 3px solid var(--iris-blue);
+            color: var(--iris-blue);
         }
 
-        .tab-content {
-            padding-top: 10px;
-        }
-
-        .announcement-list p {
+        .tab-content p {
             padding: 10px 0;
-            border-bottom: 1px solid #eee;
             font-size: 0.95rem;
+            border-bottom: 1px dashed #eee;
         }
-        .announcement-list p:last-of-type {
-             border-bottom: none;
-        }
-
+        .tab-content p:last-of-type { border-bottom: none; }
+        
+        /* Module Icons Grid */
         .module-icons {
-            /* Placeholder for the large icon grid - simulating the look */
-            min-height: 80px; 
-            background-color: var(--card-background);
-            border-radius: 8px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
-            padding: 10px;
+            display: flex;
             gap: 15px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            padding: 10px 0;
+            justify-content: space-around;
         }
         .icon-item {
-            aspect-ratio: 1 / 1;
-            background-color: var(--secondary-color);
-            border-radius: 8px;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
-            color: var(--primary-color);
+            width: 80px;
+            aspect-ratio: 1 / 1;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: transform 0.2s;
         }
+        .icon-item:hover { transform: translateY(-3px); }
 
+        .icon-item i {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+        
+        /* Specific Icon Colors based on screenshot */
+        .icon-item:nth-child(1) { background-color: #f6edff; color: var(--icon-purple); } /* Calendar */
+        .icon-item:nth-child(2) { background-color: #fff0ed; color: var(--icon-orange); } /* Library */
+        .icon-item:nth-child(3) { background-color: #e6fffb; color: var(--icon-blue); } /* Fees */
+        .icon-item:nth-child(4) { background-color: #fff7e6; color: var(--icon-orange); } /* Mess */
+        .icon-item:nth-child(5) { background-color: #e5f7ff; color: var(--icon-blue); } /* Attendance */
+        .icon-item:nth-child(6) { background-color: #fff0f6; color: var(--icon-pink); } /* Clubs */
+        .icon-item:nth-child(7) { background-color: #edfff5; color: var(--icon-green); } /* Events */
+        
+        /* Custom Widgets Row */
         .custom-widgets-row {
             display: grid;
-            grid-template-columns: 2fr 1fr; /* Club Announcements (2/3) | Important Notices (1/3) */
+            grid-template-columns: 3fr 1fr; 
             gap: 20px;
         }
 
+        /* Club Announcements */
         .club-announcements h3 {
-            color: var(--primary-color);
+            color: var(--iris-blue);
             margin-bottom: 15px;
+            font-size: 1.1rem;
         }
         .announcement-item {
             padding: 10px 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .important-notices {
-            background-color: #f7f7f7;
-            border-left: 3px solid var(--urgent-color);
-        }
-        .important-notices h3 {
-             color: var(--urgent-color);
-             margin-bottom: 15px;
-        }
-        .notice-item {
-            background-color: #fff;
-            padding: 10px;
-            margin-bottom: 8px;
-            border-radius: 4px;
+            border-bottom: 1px dashed #eee;
             font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .announcement-item:last-of-type { border-bottom: none; }
+        .announcement-item strong { color: var(--iris-blue); }
+
+        /* Important Notices */
+        .important-notices-container {
+             display: flex;
+             flex-direction: column;
+             gap: 20px;
         }
 
+        .important-notice-card {
+            background-color: var(--iris-blue);
+            color: white;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(93, 80, 245, 0.3);
+        }
 
-        /* --- RESPONSIVENESS (Mobile/Tablet) --- */
+        .important-notice-card h4 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+        .important-notice-card p {
+            font-size: 0.85rem;
+            font-weight: 500;
+            line-height: 1.4;
+            opacity: 0.9;
+        }
+
+        .red-notice-card {
+            background-color: var(--urgent-red);
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(255, 77, 79, 0.3);
+        }
+        .red-notice-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        .red-notice-card p {
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+            font-weight: 500;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.4);
+            padding-bottom: 5px;
+        }
+        .red-notice-card p:last-of-type { border-bottom: none; }
+
+        /* --- 6. RESPONSIVENESS (Mobile/Tablet) --- */
+        @media (max-width: 1200px) {
+            .academic-stats { grid-template-columns: repeat(2, 1fr); }
+            .attendance-group { grid-column: span 2; }
+            .top-row { grid-template-columns: 1fr; }
+            .custom-widgets-row { grid-template-columns: 1fr; }
+        }
+
         @media (max-width: 1024px) {
-            /* On tablets, sidebar moves below content */
-            .dashboard-grid {
-                grid-template-columns: 1fr; /* Single column layout */
-            }
-
-            .sidebar {
-                order: 2; 
-            }
-
-            .content-area {
-                order: 1;
-            }
-
-            .top-row,
-            .custom-widgets-row {
-                /* On smaller screens, stack the items */
-                grid-template-columns: 1fr;
-            }
-
-            .header {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            .main-nav {
-                width: 100%;
-                order: 1;
-                margin-top: 10px;
-            }
-            .header-actions {
-                width: 100%;
-                order: 2;
-                margin-top: 10px;
-            }
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .sidebar { order: 2; }
+            .content-area { order: 1; }
+            .header-left, .header-right { flex-grow: 1; }
+            .main-nav { display: none; /* Hide main nav on smaller screens */ }
         }
 
         @media (max-width: 600px) {
-            /* On mobile, stack academic stats */
-            .academic-stats {
-                flex-direction: column;
-            }
-
-            .stat-item {
-                border-right: none;
-                border-bottom: 1px solid #eee;
-            }
-            
-            .header {
-                padding: 10px;
-            }
+            .header { flex-wrap: wrap; }
+            .header-left { margin-bottom: 10px; }
+            .search-bar input { width: 100%; }
+            .academic-stats { grid-template-columns: 1fr; }
+            .attendance-group { grid-column: span 1; }
+            .stat-item { padding: 10px 0; border-bottom: 1px solid #eee; }
+            .stat-item:last-of-type { border-bottom: none; }
+            .module-icons { flex-wrap: wrap; justify-content: space-around; }
+            .icon-item { width: 60px; }
         }
     </style>
 </head>
 <body>
     <header class="header">
-        <div class="logo">IRIS</div>
-        <nav class="main-nav">
-            <ul>
-                <li>Dashboard | IRIS</li>
-                <li>Academics</li>
-                <li>Campus</li>
-                <li>Alumni</li>
-            </ul>
-        </nav>
-        <div class="header-actions">
-            <input type="search" placeholder="Search...">
-            <button>Tell IRIS</button>
+        <div class="header-left">
+            <div class="logo-container">
+                <i class="fas fa-university"></i>IRIS
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li class="active">Dashboard | IRIS</li>
+                    <li>Academics</li>
+                    <li>Campus</li>
+                    <li>Alumni</li>
+                </ul>
+            </nav>
+        </div>
+        <div class="header-right">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="search" placeholder="Search for...">
+            </div>
+            <button class="header-actions btn" style="background-color: var(--iris-blue); color: white; padding: 8px 15px; border: none; border-radius: 20px; font-weight: 600;">
+                <i class="fas fa-bell"></i> Tell IRIS
+            </button>
+            <i class="user-icon fas fa-user-circle"></i>
         </div>
     </header>
 
@@ -371,16 +476,16 @@
                     <li>IRIS Blog</li>
                     <li>NITK Website</li>
                     <li>Terms of Service</li>
-                    <li>Login to Moodle</li>
                 </ul>
+                <a href="#" class="btn">Login to Moodle</a>
             </div>
 
             <div class="module-designers card">
                 <h3>MODULE DESIGNERS</h3>
                 <ul>
-                    <li>Course Designer</li>
-                    <li>Assignment Designer</li>
-                    <li>Quiz Designer</li>
+                    <li><i class="fas fa-book-open"></i> Course Designer</li>
+                    <li><i class="fas fa-tasks"></i> Assignment Designer</li>
+                    <li><i class="fas fa-question-circle"></i> Quiz Designer</li>
                 </ul>
             </div>
             
@@ -397,13 +502,14 @@
         <div class="content-area">
             <div class="top-row">
                 <div class="library-notice card">
-                    Final book consumption starts in 3 days. <span class="urgent">Urgent</span>
+                    <i class="fas fa-exclamation-triangle" style="color: var(--urgent-red); margin-right: 10px;"></i>
+                    Final book consumption starts in 3 days. Overdue books due for return by Oct 27. <span class="urgent-tag">Urgent</span>
                 </div>
-                <div class="upcoming-deadlines card">
+                <div class="upcoming-deadlines">
                     <h3>Upcoming Quizzes & Deadlines</h3>
-                    <p>C5301 Assignment 3 <span class="urgent">Urgent</span></p>
-                    <p>C5302 Quiz 2</p>
-                    <p>MA302 Project Report</p>
+                    <p>C5301 Assignment 3 <span class="date">Oct 26, 2025</span></p>
+                    <p>C5302 Quiz 2 <span class="date">Oct 30, 2025</span></p>
+                    <p>MA302 Project Report <span class="date">Nov 4, 2025</span></p>
                 </div>
             </div>
 
@@ -414,16 +520,27 @@
                 <div class="stat-item">
                     <span class="value">8.18</span> SGPA
                 </div>
-                <div class="stat-item attendance">
-                    <h3>Attendance</h3>
-                    <div class="attendance-detail"><span>C5301</span><span>92%</span></div>
-                    <div class="attendance-bar"><div class="attendance-fill" style="width: 92%;"></div></div>
-                    
-                    <div class="attendance-detail"><span>C5302</span><span>95%</span></div>
-                    <div class="attendance-bar"><div class="attendance-fill" style="width: 95%;"></div></div>
-                    
-                    <div class="attendance-detail"><span>C5303</span><span>87%</span></div>
-                    <div class="attendance-bar"><div class="attendance-fill" style="width: 87%;"></div></div>
+                <div class="stat-item">
+                    <span class="value">3<i class="fas fa-chevron-down"></i></span> Semester
+                </div>
+                
+                <div class="attendance-group">
+                    <h4>Attendance</h4>
+                    <div class="attendance-line">
+                        <span class="course">C5301</span>
+                        <div class="attendance-bar-container"><div class="attendance-fill fill-92"></div></div>
+                        <span class="percent" style="color: var(--green-percent);">92%</span>
+                    </div>
+                    <div class="attendance-line">
+                        <span class="course">C5302</span>
+                        <div class="attendance-bar-container"><div class="attendance-fill fill-95"></div></div>
+                        <span class="percent" style="color: var(--blue-percent);">95%</span>
+                    </div>
+                    <div class="attendance-line">
+                        <span class="course">C5303</span>
+                        <div class="attendance-bar-container"><div class="attendance-fill fill-87"></div></div>
+                        <span class="percent" style="color: var(--pink-percent);">87%</span>
+                    </div>
                 </div>
             </div>
 
@@ -435,42 +552,53 @@
                 </div>
                 
                 <div class="tab-content announcement-list" data-content="announcements">
-                    <p>Incub@75 (NITK's Entrepreneurship Summit)</p>
-                    <p>Fee payment portal is now open</p>
-                    <p>Mess change module released</p>
+                    <p>**Incub@75** (NITK's Entrepreneurship Summit) registrations now open.</p>
+                    <p>Fee payment portal is now open.</p>
+                    <p>Mess change module released.</p>
                 </div>
                 <div class="tab-content" data-content="detailed-attendance" style="display:none;">
-                    Detailed attendance data goes here (simulated content).
+                    Detailed attendance data for all courses will be displayed here.
                 </div>
                 <div class="tab-content" data-content="courses" style="display:none;">
-                    List of registered courses goes here (simulated content).
+                    Your full course list, grades, and resources.
                 </div>
             </div>
 
             <div class="module-icons">
-                <div class="icon-item">📅</div>
-                <div class="icon-item">📚</div>
-                <div class="icon-item">💰</div>
-                <div class="icon-item">📊</div>
-                <div class="icon-item">🔔</div>
-                <div class="icon-item">⚙️</div>
-                <div class="icon-item">🎓</div>
-                <div class="icon-item">🎉</div>
+                <div class="icon-item"><i class="fas fa-calendar-alt"></i> Calendar</div>
+                <div class="icon-item"><i class="fas fa-book"></i> Library</div>
+                <div class="icon-item"><i class="fas fa-money-bill-wave"></i> Fees</div>
+                <div class="icon-item"><i class="fas fa-utensils"></i> Mess</div>
+                <div class="icon-item"><i class="fas fa-clipboard-check"></i> Attendance</div>
+                <div class="icon-item"><i class="fas fa-users"></i> Clubs</div>
+                <div class="icon-item"><i class="fas fa-running"></i> Events</div>
+                <div class="icon-item"><i class="fas fa-cogs"></i> Settings</div>
             </div>
             
             <div class="custom-widgets-row">
                 <div class="club-announcements card">
                     <h3>Custom Widgets - Club Announcements</h3>
-                    <div class="announcement-item">**IEEE ANNOUNCEMENTS**: Workshop on IoT - Nov 5, 2025</div>
-                    <div class="announcement-item">**RIT ANNOUNCEMENTS**: Day Celebration - Nov 10</div>
-                    <div class="announcement-item">**ISTE ANNOUNCEMENTS**: Coding Competition - Oct 28</div>
+                    <div class="announcement-item"><strong>IEEE ANNOUNCEMENTS</strong>: Workshop on IoT - Nov 5, 2025</div>
+                    <div class="announcement-item"><strong>RIT ANNOUNCEMENTS</strong>: RIT Day Celebration - Nov 10</div>
+                    <div class="announcement-item"><strong>ISTE ANNOUNCEMENTS</strong>: Coding Competition - Oct 28</div>
+                    <div class="announcement-item">Tech Talk starts shortly...</div>
                 </div>
 
-                <div class="important-notices card">
-                    <h3>Important Notices</h3>
-                    <div class="notice-item">**Main Registration**: Deadline extended till Oct 30</div>
-                    <div class="notice-item">**Tech Talk: AI**: Nov 15, 11:00 AM, CSE L-104</div>
-                    <div class="notice-item">Learner registration starts from 1 Nov</div>
+                <div class="important-notices-container">
+                    <div class="important-notice-card">
+                        <h4>Main Registration</h4>
+                        <p>Detailed information about the next semester's registration cycle.</p>
+                    </div>
+                    <div class="important-notice-card">
+                        <h4>Tech Talk: AI</h4>
+                        <p>Speakers: Mr. Smith. Venue: L-104 A.</p>
+                    </div>
+                    <div class="red-notice-card">
+                        <h3>Important Notices</h3>
+                        <p>Fee payment due Oct 30</p>
+                        <p>Mess change module released</p>
+                        <p>Learner registration starts from 1 Nov</p>
+                    </div>
                 </div>
             </div>
         </div>

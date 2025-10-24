@@ -31,7 +31,7 @@ The goal was to provide a clean, interactive, and responsive experience for stud
 ---
 
 ## 🚀 Live Demo
-🔗 **Live Website:** [https://https://iris-nitk-dashboard.netlify.app](https://https://iris-nitk-dashboard.netlify.app)  
+🔗 **Live Website:** [https://iris-nitk-dashboard.netlify.app](https://iris-nitk-dashboard.netlify.app)  
 💻 **GitHub Repository:** [https://github.com/jasmineparvatham/IRIS_DASHBOARD](https://github.com/jasmineparvatham/IRIS_DASHBOARD)
 
 ---

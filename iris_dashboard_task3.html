@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IRIS Dashboard Redesign (Embedded)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* CSS STYLES */
+        :root {
+            --primary-color: #5d50f5; /* A shade of blue/purple */
+            --secondary-color: #e9e9f9;
+            --background-color: #f4f6f9;
+            --card-background: #ffffff;
+            --urgent-color: #ff4d4f;
+            --text-color: #333;
+            --light-text: #666;
+            --success-color: #52c41a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* Header Styling */
+        .header {
+            background-color: var(--card-background);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .main-nav ul {
+            display: flex;
+            gap: 20px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .header-actions input[type="search"] {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .header-actions button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* Main Dashboard Grid Layout */
+        .dashboard-grid {
+            display: grid;
+            gap: 20px;
+            padding: 20px;
+            /* Default layout: Sidebar (280px) and Content (rest) */
+            grid-template-columns: 280px 1fr; 
+        }
+
+        /* Reusable Card Style */
+        .card {
+            background-color: var(--card-background);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar h3 {
+            font-size: 0.9rem;
+            color: var(--light-text);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .sidebar ul li {
+            padding: 8px 0;
+            color: var(--primary-color);
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .sidebar ul li:hover {
+            opacity: 0.8;
+        }
+
+        /* Content Area Layout */
+        .content-area {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .top-row {
+            display: grid;
+            /* Library Notice (40%) | Deadlines (60%) */
+            grid-template-columns: 2fr 3fr; 
+            gap: 20px;
+        }
+
+        .library-notice {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+
+        .urgent {
+            color: var(--urgent-color);
+            font-weight: 700;
+            margin-left: 10px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background-color: rgba(255, 77, 79, 0.1);
+        }
+
+        .upcoming-deadlines h3 {
+            color: var(--urgent-color);
+            margin-bottom: 15px;
+        }
+        .upcoming-deadlines p {
+            padding: 5px 0;
+            border-bottom: 1px dashed #eee;
+        }
+        .upcoming-deadlines p:last-of-type {
+             border-bottom: none;
+        }
+
+
+        .academic-stats {
+            display: flex;
+            gap: 20px;
+        }
+
+        .stat-item {
+            flex-grow: 1;
+            padding: 15px;
+            border-right: 1px solid #eee;
+        }
+
+        .stat-item:last-child {
+            border-right: none;
+        }
+
+        .stat-item .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: block;
+        }
+        
+        /* Attendance Bars */
+        .attendance-bar {
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            height: 8px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        
+        .attendance-fill {
+            height: 100%;
+            background-color: var(--success-color);
+        }
+        
+        .attendance-detail {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+
+        /* Announcements/Tabs */
+        .tabs button {
+            padding: 10px 15px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--light-text);
+            margin-bottom: 10px;
+        }
+
+        .tabs .active {
+            border-bottom: 3px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .tab-content {
+            padding-top: 10px;
+        }
+
+        .announcement-list p {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 0.95rem;
+        }
+        .announcement-list p:last-of-type {
+             border-bottom: none;
+        }
+
+        .module-icons {
+            /* Placeholder for the large icon grid - simulating the look */
+            min-height: 80px; 
+            background-color: var(--card-background);
+            border-radius: 8px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+            padding: 10px;
+            gap: 15px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+        .icon-item {
+            aspect-ratio: 1 / 1;
+            background-color: var(--secondary-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .custom-widgets-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr; /* Club Announcements (2/3) | Important Notices (1/3) */
+            gap: 20px;
+        }
+
+        .club-announcements h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        .announcement-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .important-notices {
+            background-color: #f7f7f7;
+            border-left: 3px solid var(--urgent-color);
+        }
+        .important-notices h3 {
+             color: var(--urgent-color);
+             margin-bottom: 15px;
+        }
+        .notice-item {
+            background-color: #fff;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+
+        /* --- RESPONSIVENESS (Mobile/Tablet) --- */
+        @media (max-width: 1024px) {
+            /* On tablets, sidebar moves below content */
+            .dashboard-grid {
+                grid-template-columns: 1fr; /* Single column layout */
+            }
+
+            .sidebar {
+                order: 2; 
+            }
+
+            .content-area {
+                order: 1;
+            }
+
+            .top-row,
+            .custom-widgets-row {
+                /* On smaller screens, stack the items */
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .main-nav {
+                width: 100%;
+                order: 1;
+                margin-top: 10px;
+            }
+            .header-actions {
+                width: 100%;
+                order: 2;
+                margin-top: 10px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            /* On mobile, stack academic stats */
+            .academic-stats {
+                flex-direction: column;
+            }
+
+            .stat-item {
+                border-right: none;
+                border-bottom: 1px solid #eee;
+            }
+            
+            .header {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">IRIS</div>
+        <nav class="main-nav">
+            <ul>
+                <li>Dashboard | IRIS</li>
+                <li>Academics</li>
+                <li>Campus</li>
+                <li>Alumni</li>
+            </ul>
+        </nav>
+        <div class="header-actions">
+            <input type="search" placeholder="Search...">
+            <button>Tell IRIS</button>
+        </div>
+    </header>
+
+    <main class="dashboard-grid">
+        <aside class="sidebar">
+            <div class="quick-links card">
+                <h3>QUICK LINKS</h3>
+                <ul>
+                    <li>About IRIS</li>
+                    <li>IRIS Blog</li>
+                    <li>NITK Website</li>
+                    <li>Terms of Service</li>
+                    <li>Login to Moodle</li>
+                </ul>
+            </div>
+
+            <div class="module-designers card">
+                <h3>MODULE DESIGNERS</h3>
+                <ul>
+                    <li>Course Designer</li>
+                    <li>Assignment Designer</li>
+                    <li>Quiz Designer</li>
+                </ul>
+            </div>
+            
+            <div class="support card">
+                <h3>SUPPORT</h3>
+                <ul>
+                    <li>Help Center</li>
+                    <li>Documentation</li>
+                    <li>Contact Support</li>
+                </ul>
+            </div>
+        </aside>
+
+        <div class="content-area">
+            <div class="top-row">
+                <div class="library-notice card">
+                    Final book consumption starts in 3 days. <span class="urgent">Urgent</span>
+                </div>
+                <div class="upcoming-deadlines card">
+                    <h3>Upcoming Quizzes & Deadlines</h3>
+                    <p>C5301 Assignment 3 <span class="urgent">Urgent</span></p>
+                    <p>C5302 Quiz 2</p>
+                    <p>MA302 Project Report</p>
+                </div>
+            </div>
+
+            <div class="academic-stats card">
+                <div class="stat-item">
+                    <span class="value">44</span> Major Credits
+                </div>
+                <div class="stat-item">
+                    <span class="value">8.18</span> SGPA
+                </div>
+                <div class="stat-item attendance">
+                    <h3>Attendance</h3>
+                    <div class="attendance-detail"><span>C5301</span><span>92%</span></div>
+                    <div class="attendance-bar"><div class="attendance-fill" style="width: 92%;"></div></div>
+                    
+                    <div class="attendance-detail"><span>C5302</span><span>95%</span></div>
+                    <div class="attendance-bar"><div class="attendance-fill" style="width: 95%;"></div></div>
+                    
+                    <div class="attendance-detail"><span>C5303</span><span>87%</span></div>
+                    <div class="attendance-bar"><div class="attendance-fill" style="width: 87%;"></div></div>
+                </div>
+            </div>
+
+            <div class="announcements-section card">
+                <div class="tabs" id="announcement-tabs">
+                    <button class="active" data-tab="announcements">Announcements</button>
+                    <button data-tab="detailed-attendance">Detailed Attendance</button>
+                    <button data-tab="courses">Courses</button>
+                </div>
+                
+                <div class="tab-content announcement-list" data-content="announcements">
+                    <p>Incub@75 (NITK's Entrepreneurship Summit)</p>
+                    <p>Fee payment portal is now open</p>
+                    <p>Mess change module released</p>
+                </div>
+                <div class="tab-content" data-content="detailed-attendance" style="display:none;">
+                    Detailed attendance data goes here (simulated content).
+                </div>
+                <div class="tab-content" data-content="courses" style="display:none;">
+                    List of registered courses goes here (simulated content).
+                </div>
+            </div>
+
+            <div class="module-icons">
+                <div class="icon-item">📅</div>
+                <div class="icon-item">📚</div>
+                <div class="icon-item">💰</div>
+                <div class="icon-item">📊</div>
+                <div class="icon-item">🔔</div>
+                <div class="icon-item">⚙️</div>
+                <div class="icon-item">🎓</div>
+                <div class="icon-item">🎉</div>
+            </div>
+            
+            <div class="custom-widgets-row">
+                <div class="club-announcements card">
+                    <h3>Custom Widgets - Club Announcements</h3>
+                    <div class="announcement-item">**IEEE ANNOUNCEMENTS**: Workshop on IoT - Nov 5, 2025</div>
+                    <div class="announcement-item">**RIT ANNOUNCEMENTS**: Day Celebration - Nov 10</div>
+                    <div class="announcement-item">**ISTE ANNOUNCEMENTS**: Coding Competition - Oct 28</div>
+                </div>
+
+                <div class="important-notices card">
+                    <h3>Important Notices</h3>
+                    <div class="notice-item">**Main Registration**: Deadline extended till Oct 30</div>
+                    <div class="notice-item">**Tech Talk: AI**: Nov 15, 11:00 AM, CSE L-104</div>
+                    <div class="notice-item">Learner registration starts from 1 Nov</div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        // JAVASCRIPT FOR TAB INTERACTIVITY
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabsContainer = document.getElementById('announcement-tabs');
+            
+            tabsContainer.addEventListener('click', (event) => {
+                const clickedButton = event.target.closest('button');
+                
+                if (clickedButton) {
+                    const tabName = clickedButton.getAttribute('data-tab');
+                    
+                    // 1. Remove 'active' class from all buttons and hide all content
+                    tabsContainer.querySelectorAll('button').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.style.display = 'none';
+                    });
+                    
+                    // 2. Add 'active' class to the clicked button
+                    clickedButton.classList.add('active');
+                    
+                    // 3. Show the corresponding content
+                    const targetContent = document.querySelector(`.tab-content[data-content="${tabName}"]`);
+                    if (targetContent) {
+                        targetContent.style.display = 'block';
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
